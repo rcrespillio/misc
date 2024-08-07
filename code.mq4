@@ -1,6 +1,6 @@
 
 //+------------------------------------------------------------------+
-//|                                               EL METABOT v1.0  |
+//|                                               EL METABOT v1.1  |
 //+------------------------------------------------------------------+
 // Dec 15 -2011 -- Add Timer for Loop and print to screen
 // Sep 12 - 2016 -- exposed time frame for ilan1.5
@@ -226,17 +226,17 @@ int start()
    // ForestGreen' YellowGreen' Yellow' OrangeRed' Red
    string Balans = NormalizeDouble(AccountBalance(), 2);
    int Sredstva = NormalizeDouble(AccountEquity(), 2);
-   if (Sredstva >= Balans / 6 * 5)
+   if (Sredstva >= (Balans / 6 * 5))
       col = DodgerBlue;
-   if (Sredstva >= Balans / 6 * 4 && Sredstva < Balans / 6 * 5)
+   if (Sredstva >= (Balans / 6 * 4) && Sredstva < (Balans / 6 * 5))
       col = DeepSkyBlue;
-   if (Sredstva >= Balans / 6 * 3 && Sredstva < Balans / 6 * 4)
+   if (Sredstva >= (Balans / 6 * 3) && Sredstva < (Balans / 6 * 4))
       col = Gold;
-   if (Sredstva >= Balans / 6 * 2 && Sredstva < Balans / 6 * 3)
+   if (Sredstva >= (Balans / 6 * 2) && Sredstva < (Balans / 6 * 3))
       col = OrangeRed;
-   if (Sredstva >= Balans / 6 && Sredstva < Balans / 6 * 2)
+   if (Sredstva >= (Balans / 6) && Sredstva < (Balans / 6 * 2))
       col = Crimson;
-   if (Sredstva < Balans / 5)
+   if (Sredstva < (Balans / 5))
       col = Red;
    //-------------------------
    ObjectDelete("Lable2");
