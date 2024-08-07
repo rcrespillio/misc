@@ -33,96 +33,7 @@ extern int CloseFridayHour = 17; // время в пятницу после ко
 extern bool OpenMonday = true;   // использовать ограничение по времени в пятницу true, не использовать false
 extern int OpenMondayHour = 10;  // время в пятницу после которого не выставляется первый ордер
 
-//===================================================================
-//-------------------Hilo_RSI--------------------------------------//
-//===================================================================
-double LotExponent_Hilo;
-int lotdecimal_Hilo;
-double TakeProfit_Hilo;         // ���� ������
-extern int MaxTrades_Hilo = 10; // ����������� ���������� ������������ �������� �������
-bool UseEquityStop_Hilo;        // ������������ ���� � ���������
-double TotalEquityRisk_Hilo;    // ���� � ��������� �� ��������
-//=====================================================
-bool UseTimeOut_Hilo = FALSE;         // ������������ ������������ ������� �� �������
-double MaxTradeOpenHours_Hilo = 48.0; // ����� ������ ����� ����������� ������� ������
-//=====================================================
-bool UseTrailingStop_Hilo;   // ������������ �������� ����
-double Stoploss_Hilo = 40.0; // ��� ��������� ��������!!!
-double TrailStart_Hilo;
-double TrailStop_Hilo;
-//=====================================================
-double PipStep_Hilo;                 // ��� ������- ��� 30
-double slip_Hilo;                    // ���������������
-extern int MagicNumber_Hilo = 10278; // �����
-//=====================================================
-double PriceTarget_Hilo, StartEquity_Hilo, BuyTarget_Hilo, SellTarget_Hilo, Balans, Sredstva;
-double AveragePrice_Hilo, SellLimit_Hilo, BuyLimit_Hilo;
-double LastBuyPrice_Hilo, LastSellPrice_Hilo, Spread_Hilo;
-bool flag_Hilo;
-int timeprev_Hilo = 0, expiration_Hilo;
-int NumOfTrades_Hilo = 0;
-double iLots_Hilo;
-int cnt_Hilo = 0, total_Hilo;
-double Stopper_Hilo = 0.0;
-bool TradeNow_Hilo = FALSE, LongTrade_Hilo = FALSE, ShortTrade_Hilo = FALSE;
-int ticket_Hilo;
-bool NewOrdersPlaced_Hilo = FALSE;
-double AccountEquityHighAmt_Hilo, PrevEquity_Hilo;
-//==============================
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//            ILAN 1.5                       //
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-extern string t5 = "SETTINGS for Ilan 1.5 EA";
-double LotExponent_15;
-double Lots_15;
-int lotdecimal_15;
-double TakeProfit_15;
-bool UseEquityStop_15;     // ������������ ���� � ���������
-double TotalEquityRisk_15; // ���� � ��������� �� ��������
-extern int MaxTrades_15 = 10;
-int OpenNewTF_15 = 60;
-int gi_unused_88_15;
 //==============================================
-bool UseTrailingStop_15;   // ������������ �������� ����
-double Stoploss_15 = 40.0; // ��� ���������  ��������!!!
-double TrailStart_15;
-double TrailStop_15;
-//==============================================
-bool UseTimeOut_15 = FALSE;         // ������������ ������������ ������� �� �������
-double MaxTradeOpenHours_15 = 48.0; // ����� ������ ����� ����������� ������� ������
-//===============================================
-double PipStep_15; // 30
-double slip_15;
-extern int g_magic_176_15 = 22324;
-//===============================================
-double g_price_180_15;
-double gd_188_15;
-double gd_unused_196_15;
-double gd_unused_204_15;
-double g_price_212_15;
-double g_bid_220_15;
-double g_ask_228_15;
-double gd_236_15;
-double gd_244_15;
-double gd_260_15;
-bool gi_268_15;
-string gs_ilan_272_15 = "Ilan 1.5-KS";
-int gi_280_15 = 0;
-int gi_284_15;
-int gi_288_15 = 0;
-double gd_292_15;
-int g_pos_300_15 = 0;
-int gi_304_15;
-double gd_308_15 = 0.0;
-bool gi_316_15 = FALSE;
-bool gi_320_15 = FALSE;
-bool gi_324_15 = FALSE;
-int gi_328_15;
-bool gi_332_15 = FALSE;
-double gd_336_15;
-double gd_344_15;
-datetime time_15 = 1;
-//========================================================================
 //                 ILAN 1.6                                             //
 //========================================================================
 extern string t6 = "SETTINGS for Ilan 1.6 EA";
@@ -278,10 +189,6 @@ color col = ForestGreen;
 int init()
 
 {
-   //=======================
-   Spread_Hilo = MarketInfo(Symbol(), MODE_SPREAD) * Point;
-   gd_260_15 = MarketInfo(Symbol(), MODE_SPREAD) * Point;
-   gd_260_16 = MarketInfo(Symbol(), MODE_SPREAD) * Point;
    //------------------------
    ObjectCreate("Lable1", OBJ_LABEL, 0, 0, 1.0);
    ObjectSet("Lable1", OBJPROP_CORNER, 2);
@@ -370,21 +277,6 @@ int start()
    }
    //=================
    //=================
-   // ForestGreen' YellowGreen' Yellow' OrangeRed' Red
-   Balans = NormalizeDouble(AccountBalance(), 2);
-   Sredstva = NormalizeDouble(AccountEquity(), 2);
-   if (Sredstva >= Balans / 6 * 5)
-      col = DodgerBlue;
-   if (Sredstva >= Balans / 6 * 4 && Sredstva < Balans / 6 * 5)
-      col = DeepSkyBlue;
-   if (Sredstva >= Balans / 6 * 3 && Sredstva < Balans / 6 * 4)
-      col = Gold;
-   if (Sredstva >= Balans / 6 * 2 && Sredstva < Balans / 6 * 3)
-      col = OrangeRed;
-   if (Sredstva >= Balans / 6 && Sredstva < Balans / 6 * 2)
-      col = Crimson;
-   if (Sredstva < Balans / 5)
-      col = Red;
    //-------------------------
    ObjectDelete("Lable2");
    ObjectCreate("Lable2", OBJ_LABEL, 0, 0, 1.0);
