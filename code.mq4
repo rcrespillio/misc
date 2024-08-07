@@ -424,236 +424,237 @@ int start()
          }
          if (gi_304_16 > 0)
             g_price_212_16 = NormalizeDouble(g_price_212_16 / ld_24_16, Digits);
+      }
+      //=============================
+      return (0);
    }
-   //=============================
-   return (0);
-}
 
-//==========================================================================
-//                       ODER FUNCTIONS for 1.6                           //
-//==========================================================================
+   //==========================================================================
+   //                       ODER FUNCTIONS for 1.6                           //
+   //==========================================================================
 
-//============================================================//
-//======================CountTrades_16========================//
-//============================================================//
-int CountTrades_16()
-{
-   int l_count_0_16 = 0;
-   for (int l_pos_4_16 = OrdersTotal() - 1; l_pos_4_16 >= 0; l_pos_4_16--)
+   //============================================================//
+   //======================CountTrades_16========================//
+   //============================================================//
+   int CountTrades_16()
    {
-      OrderSelect(l_pos_4_16, SELECT_BY_POS, MODE_TRADES);
-      if (OrderSymbol() != Symbol() || OrderMagicNumber() != g_magic_176_16)
-         continue;
-      if (OrderSymbol() == Symbol() && OrderMagicNumber() == g_magic_176_16)
-         if (OrderType() == OP_SELL || OrderType() == OP_BUY)
-            l_count_0_16++;
-   }
-   return (l_count_0_16);
-}
-
-void CloseThisSymbolAll_16()
-{
-   for (int l_pos_0_16 = OrdersTotal() - 1; l_pos_0_16 >= 0; l_pos_0_16--)
-   {
-      OrderSelect(l_pos_0_16, SELECT_BY_POS, MODE_TRADES);
-      if (OrderSymbol() == Symbol())
+      int l_count_0_16 = 0;
+      for (int l_pos_4_16 = OrdersTotal() - 1; l_pos_4_16 >= 0; l_pos_4_16--)
       {
+         OrderSelect(l_pos_4_16, SELECT_BY_POS, MODE_TRADES);
+         if (OrderSymbol() != Symbol() || OrderMagicNumber() != g_magic_176_16)
+            continue;
          if (OrderSymbol() == Symbol() && OrderMagicNumber() == g_magic_176_16)
+            if (OrderType() == OP_SELL || OrderType() == OP_BUY)
+               l_count_0_16++;
+      }
+      return (l_count_0_16);
+   }
+
+   void CloseThisSymbolAll_16()
+   {
+      for (int l_pos_0_16 = OrdersTotal() - 1; l_pos_0_16 >= 0; l_pos_0_16--)
+      {
+         OrderSelect(l_pos_0_16, SELECT_BY_POS, MODE_TRADES);
+         if (OrderSymbol() == Symbol())
          {
-            if (OrderType() == OP_BUY)
-               OrderClose(OrderTicket(), OrderLots(), Bid, slip_16, Blue);
-            if (OrderType() == OP_SELL)
-               OrderClose(OrderTicket(), OrderLots(), Ask, slip_16, Red);
-         }
-         Sleep(1000);
-      }
-   }
-}
-
-int OpenPendingOrder_16(int ai_0_16, double a_lots_4_16, double a_price_12_16, int a_slippage_20_16, double ad_24_16, int ai_32_16, int ai_36_16, string a_comment_40_16, int a_magic_48_16, int a_datetime_52_16, color a_color_56_16)
-{
-   int l_ticket_60_16 = 0;
-   int l_error_64_16 = 0;
-   int l_count_68_16 = 0;
-   int li_72_16 = 100;
-   switch (ai_0_16)
-   {
-   case 0:
-      for (l_count_68_16 = 0; l_count_68_16 < li_72_16; l_count_68_16++)
-      {
-         RefreshRates();
-         l_ticket_60_16 = OrderSend(Symbol(), OP_BUY, a_lots_4_16, Ask, a_slippage_20_16, StopLong_16(Bid, ai_32_16), TakeLong_16(Ask, ai_36_16), a_comment_40_16, a_magic_48_16, a_datetime_52_16, a_color_56_16);
-         l_error_64_16 = GetLastError();
-         if (l_error_64_16 == 0 /* NO_ERROR */)
-            break;
-         if (!(l_error_64_16 == 4 /* SERVER_BUSY */ || l_error_64_16 == 137 /* BROKER_BUSY */ || l_error_64_16 == 146 /* TRADE_CONTEXT_BUSY */ || l_error_64_16 == 136 /* OFF_QUOTES */))
-            break;
-         Sleep(5000);
-      }
-      break;
-   case 1:
-      for (l_count_68_16 = 0; l_count_68_16 < li_72_16; l_count_68_16++)
-      {
-         l_ticket_60_16 = OrderSend(Symbol(), OP_SELL, a_lots_4_16, Bid, a_slippage_20_16, StopShort_16(Ask, ai_32_16), TakeShort_16(Bid, ai_36_16), a_comment_40_16, a_magic_48_16, a_datetime_52_16, a_color_56_16);
-         l_error_64_16 = GetLastError();
-         if (l_error_64_16 == 0 /* NO_ERROR */)
-            break;
-         if (!(l_error_64_16 == 4 /* SERVER_BUSY */ || l_error_64_16 == 137 /* BROKER_BUSY */ || l_error_64_16 == 146 /* TRADE_CONTEXT_BUSY */ || l_error_64_16 == 136 /* OFF_QUOTES */))
-            break;
-         Sleep(5000);
-      }
-   }
-
-   return (l_ticket_60_16);
-}
-
-double StopLong_16(double ad_0_16, int ai_8_16)
-{
-   if (ai_8_16 == 0)
-      return (0);
-   else
-      return (ad_0_16 - ai_8_16 * Point);
-}
-
-double StopShort_16(double ad_0_16, int ai_8_16)
-{
-   if (ai_8_16 == 0)
-      return (0);
-   else
-      return (ad_0_16 + ai_8_16 * Point);
-}
-
-double TakeLong_16(double ad_0_16, int ai_8_16)
-{
-   if (ai_8_16 == 0)
-      return (0);
-   else
-      return (ad_0_16 + ai_8_16 * Point);
-}
-
-double TakeShort_16(double ad_0_16, int ai_8_16)
-{
-   if (ai_8_16 == 0)
-      return (0);
-   else
-      return (ad_0_16 - ai_8_16 * Point);
-}
-
-double CalculateProfit_16()
-{
-   double ld_ret_0_16 = 0;
-   for (g_pos_300_16 = OrdersTotal() - 1; g_pos_300_16 >= 0; g_pos_300_16--)
-   {
-      OrderSelect(g_pos_300_16, SELECT_BY_POS, MODE_TRADES);
-      if (OrderSymbol() != Symbol() || OrderMagicNumber() != g_magic_176_16)
-         continue;
-      if (OrderSymbol() == Symbol() && OrderMagicNumber() == g_magic_176_16)
-         if (OrderType() == OP_BUY || OrderType() == OP_SELL)
-            ld_ret_0_16 += OrderProfit();
-   }
-   return (ld_ret_0_16);
-}
-
-void TrailingAlls_16(int ai_0_16, int ai_4_16, double a_price_8_16)
-{
-   int l_ticket_16_16;
-   double l_ord_stoploss_20_16;
-   double l_price_28_16;
-   if (ai_4_16 != 0)
-   {
-      for (int l_pos_36 = OrdersTotal() - 1; l_pos_36 >= 0; l_pos_36--)
-      {
-         if (OrderSelect(l_pos_36, SELECT_BY_POS, MODE_TRADES))
-         {
-            if (OrderSymbol() != Symbol() || OrderMagicNumber() != g_magic_176_16)
-               continue;
-            if (OrderSymbol() == Symbol() || OrderMagicNumber() == g_magic_176_16)
+            if (OrderSymbol() == Symbol() && OrderMagicNumber() == g_magic_176_16)
             {
                if (OrderType() == OP_BUY)
-               {
-                  l_ticket_16_16 = NormalizeDouble((Bid - a_price_8_16) / Point, 0);
-                  if (l_ticket_16_16 < ai_0_16)
-                     continue;
-                  l_ord_stoploss_20_16 = OrderStopLoss();
-                  l_price_28_16 = Bid - ai_4_16 * Point;
-                  if (l_ord_stoploss_20_16 == 0.0 || (l_ord_stoploss_20_16 != 0.0 && l_price_28_16 > l_ord_stoploss_20_16))
-                     OrderModify(OrderTicket(), a_price_8_16, l_price_28_16, OrderTakeProfit(), 0, Aqua);
-               }
+                  OrderClose(OrderTicket(), OrderLots(), Bid, slip_16, Blue);
                if (OrderType() == OP_SELL)
-               {
-                  l_ticket_16_16 = NormalizeDouble((a_price_8_16 - Ask) / Point, 0);
-                  if (l_ticket_16_16 < ai_0_16)
-                     continue;
-                  l_ord_stoploss_20_16 = OrderStopLoss();
-                  l_price_28_16 = Ask + ai_4_16 * Point;
-                  if (l_ord_stoploss_20_16 == 0.0 || (l_ord_stoploss_20_16 != 0.0 && l_price_28_16 < l_ord_stoploss_20_16))
-                     OrderModify(OrderTicket(), a_price_8_16, l_price_28_16, OrderTakeProfit(), 0, Red);
-               }
+                  OrderClose(OrderTicket(), OrderLots(), Ask, slip_16, Red);
             }
             Sleep(1000);
          }
       }
    }
-}
 
-double AccountEquityHigh_16()
-{
-   if (CountTrades_16() == 0)
-      gd_336_16 = AccountEquity();
-   if (gd_336_16 < gd_344_16)
-      gd_336_16 = gd_344_16;
-   else
-      gd_336_16 = AccountEquity();
-   gd_344_16 = AccountEquity();
-   return (gd_336_16);
-}
-
-double FindLastBuyPrice_16()
-{
-   double l_ord_open_price_8_16;
-   int l_ticket_24_16;
-   double ld_unused_0_16 = 0;
-   int l_ticket_20_16 = 0;
-   for (int l_pos_16_16 = OrdersTotal() - 1; l_pos_16_16 >= 0; l_pos_16_16--)
+   int OpenPendingOrder_16(int ai_0_16, double a_lots_4_16, double a_price_12_16, int a_slippage_20_16, double ad_24_16, int ai_32_16, int ai_36_16, string a_comment_40_16, int a_magic_48_16, int a_datetime_52_16, color a_color_56_16)
    {
-      OrderSelect(l_pos_16_16, SELECT_BY_POS, MODE_TRADES);
-      if (OrderSymbol() != Symbol() || OrderMagicNumber() != g_magic_176_16)
-         continue;
-      if (OrderSymbol() == Symbol() && OrderMagicNumber() == g_magic_176_16 && OrderType() == OP_BUY)
+      int l_ticket_60_16 = 0;
+      int l_error_64_16 = 0;
+      int l_count_68_16 = 0;
+      int li_72_16 = 100;
+      switch (ai_0_16)
       {
-         l_ticket_24_16 = OrderTicket();
-         if (l_ticket_24_16 > l_ticket_20_16)
+      case 0:
+         for (l_count_68_16 = 0; l_count_68_16 < li_72_16; l_count_68_16++)
          {
-            l_ord_open_price_8_16 = OrderOpenPrice();
-            ld_unused_0_16 = l_ord_open_price_8_16;
-            l_ticket_20_16 = l_ticket_24_16;
+            RefreshRates();
+            l_ticket_60_16 = OrderSend(Symbol(), OP_BUY, a_lots_4_16, Ask, a_slippage_20_16, StopLong_16(Bid, ai_32_16), TakeLong_16(Ask, ai_36_16), a_comment_40_16, a_magic_48_16, a_datetime_52_16, a_color_56_16);
+            l_error_64_16 = GetLastError();
+            if (l_error_64_16 == 0 /* NO_ERROR */)
+               break;
+            if (!(l_error_64_16 == 4 /* SERVER_BUSY */ || l_error_64_16 == 137 /* BROKER_BUSY */ || l_error_64_16 == 146 /* TRADE_CONTEXT_BUSY */ || l_error_64_16 == 136 /* OFF_QUOTES */))
+               break;
+            Sleep(5000);
+         }
+         break;
+      case 1:
+         for (l_count_68_16 = 0; l_count_68_16 < li_72_16; l_count_68_16++)
+         {
+            l_ticket_60_16 = OrderSend(Symbol(), OP_SELL, a_lots_4_16, Bid, a_slippage_20_16, StopShort_16(Ask, ai_32_16), TakeShort_16(Bid, ai_36_16), a_comment_40_16, a_magic_48_16, a_datetime_52_16, a_color_56_16);
+            l_error_64_16 = GetLastError();
+            if (l_error_64_16 == 0 /* NO_ERROR */)
+               break;
+            if (!(l_error_64_16 == 4 /* SERVER_BUSY */ || l_error_64_16 == 137 /* BROKER_BUSY */ || l_error_64_16 == 146 /* TRADE_CONTEXT_BUSY */ || l_error_64_16 == 136 /* OFF_QUOTES */))
+               break;
+            Sleep(5000);
+         }
+      }
+
+      return (l_ticket_60_16);
+   }
+
+   double StopLong_16(double ad_0_16, int ai_8_16)
+   {
+      if (ai_8_16 == 0)
+         return (0);
+      else
+         return (ad_0_16 - ai_8_16 * Point);
+   }
+
+   double StopShort_16(double ad_0_16, int ai_8_16)
+   {
+      if (ai_8_16 == 0)
+         return (0);
+      else
+         return (ad_0_16 + ai_8_16 * Point);
+   }
+
+   double TakeLong_16(double ad_0_16, int ai_8_16)
+   {
+      if (ai_8_16 == 0)
+         return (0);
+      else
+         return (ad_0_16 + ai_8_16 * Point);
+   }
+
+   double TakeShort_16(double ad_0_16, int ai_8_16)
+   {
+      if (ai_8_16 == 0)
+         return (0);
+      else
+         return (ad_0_16 - ai_8_16 * Point);
+   }
+
+   double CalculateProfit_16()
+   {
+      double ld_ret_0_16 = 0;
+      for (g_pos_300_16 = OrdersTotal() - 1; g_pos_300_16 >= 0; g_pos_300_16--)
+      {
+         OrderSelect(g_pos_300_16, SELECT_BY_POS, MODE_TRADES);
+         if (OrderSymbol() != Symbol() || OrderMagicNumber() != g_magic_176_16)
+            continue;
+         if (OrderSymbol() == Symbol() && OrderMagicNumber() == g_magic_176_16)
+            if (OrderType() == OP_BUY || OrderType() == OP_SELL)
+               ld_ret_0_16 += OrderProfit();
+      }
+      return (ld_ret_0_16);
+   }
+
+   void TrailingAlls_16(int ai_0_16, int ai_4_16, double a_price_8_16)
+   {
+      int l_ticket_16_16;
+      double l_ord_stoploss_20_16;
+      double l_price_28_16;
+      if (ai_4_16 != 0)
+      {
+         for (int l_pos_36 = OrdersTotal() - 1; l_pos_36 >= 0; l_pos_36--)
+         {
+            if (OrderSelect(l_pos_36, SELECT_BY_POS, MODE_TRADES))
+            {
+               if (OrderSymbol() != Symbol() || OrderMagicNumber() != g_magic_176_16)
+                  continue;
+               if (OrderSymbol() == Symbol() || OrderMagicNumber() == g_magic_176_16)
+               {
+                  if (OrderType() == OP_BUY)
+                  {
+                     l_ticket_16_16 = NormalizeDouble((Bid - a_price_8_16) / Point, 0);
+                     if (l_ticket_16_16 < ai_0_16)
+                        continue;
+                     l_ord_stoploss_20_16 = OrderStopLoss();
+                     l_price_28_16 = Bid - ai_4_16 * Point;
+                     if (l_ord_stoploss_20_16 == 0.0 || (l_ord_stoploss_20_16 != 0.0 && l_price_28_16 > l_ord_stoploss_20_16))
+                        OrderModify(OrderTicket(), a_price_8_16, l_price_28_16, OrderTakeProfit(), 0, Aqua);
+                  }
+                  if (OrderType() == OP_SELL)
+                  {
+                     l_ticket_16_16 = NormalizeDouble((a_price_8_16 - Ask) / Point, 0);
+                     if (l_ticket_16_16 < ai_0_16)
+                        continue;
+                     l_ord_stoploss_20_16 = OrderStopLoss();
+                     l_price_28_16 = Ask + ai_4_16 * Point;
+                     if (l_ord_stoploss_20_16 == 0.0 || (l_ord_stoploss_20_16 != 0.0 && l_price_28_16 < l_ord_stoploss_20_16))
+                        OrderModify(OrderTicket(), a_price_8_16, l_price_28_16, OrderTakeProfit(), 0, Red);
+                  }
+               }
+               Sleep(1000);
+            }
          }
       }
    }
-   return (l_ord_open_price_8_16);
-}
 
-double FindLastSellPrice_16()
-{
-   double l_ord_open_price_8_16;
-   int l_ticket_24_16;
-   double ld_unused_0_16 = 0;
-   int l_ticket_20_16 = 0;
-   for (int l_pos_16_16 = OrdersTotal() - 1; l_pos_16_16 >= 0; l_pos_16_16--)
+   double AccountEquityHigh_16()
    {
-      OrderSelect(l_pos_16_16, SELECT_BY_POS, MODE_TRADES);
-      if (OrderSymbol() != Symbol() || OrderMagicNumber() != g_magic_176_16)
-         continue;
-      if (OrderSymbol() == Symbol() && OrderMagicNumber() == g_magic_176_16 && OrderType() == OP_SELL)
+      if (CountTrades_16() == 0)
+         gd_336_16 = AccountEquity();
+      if (gd_336_16 < gd_344_16)
+         gd_336_16 = gd_344_16;
+      else
+         gd_336_16 = AccountEquity();
+      gd_344_16 = AccountEquity();
+      return (gd_336_16);
+   }
+
+   double FindLastBuyPrice_16()
+   {
+      double l_ord_open_price_8_16;
+      int l_ticket_24_16;
+      double ld_unused_0_16 = 0;
+      int l_ticket_20_16 = 0;
+      for (int l_pos_16_16 = OrdersTotal() - 1; l_pos_16_16 >= 0; l_pos_16_16--)
       {
-         l_ticket_24_16 = OrderTicket();
-         if (l_ticket_24_16 > l_ticket_20_16)
+         OrderSelect(l_pos_16_16, SELECT_BY_POS, MODE_TRADES);
+         if (OrderSymbol() != Symbol() || OrderMagicNumber() != g_magic_176_16)
+            continue;
+         if (OrderSymbol() == Symbol() && OrderMagicNumber() == g_magic_176_16 && OrderType() == OP_BUY)
          {
-            l_ord_open_price_8_16 = OrderOpenPrice();
-            ld_unused_0_16 = l_ord_open_price_8_16;
-            l_ticket_20_16 = l_ticket_24_16;
+            l_ticket_24_16 = OrderTicket();
+            if (l_ticket_24_16 > l_ticket_20_16)
+            {
+               l_ord_open_price_8_16 = OrderOpenPrice();
+               ld_unused_0_16 = l_ord_open_price_8_16;
+               l_ticket_20_16 = l_ticket_24_16;
+            }
          }
       }
+      return (l_ord_open_price_8_16);
    }
-   return (l_ord_open_price_8_16);
+
+   double FindLastSellPrice_16()
+   {
+      double l_ord_open_price_8_16;
+      int l_ticket_24_16;
+      double ld_unused_0_16 = 0;
+      int l_ticket_20_16 = 0;
+      for (int l_pos_16_16 = OrdersTotal() - 1; l_pos_16_16 >= 0; l_pos_16_16--)
+      {
+         OrderSelect(l_pos_16_16, SELECT_BY_POS, MODE_TRADES);
+         if (OrderSymbol() != Symbol() || OrderMagicNumber() != g_magic_176_16)
+            continue;
+         if (OrderSymbol() == Symbol() && OrderMagicNumber() == g_magic_176_16 && OrderType() == OP_SELL)
+         {
+            l_ticket_24_16 = OrderTicket();
+            if (l_ticket_24_16 > l_ticket_20_16)
+            {
+               l_ord_open_price_8_16 = OrderOpenPrice();
+               ld_unused_0_16 = l_ord_open_price_8_16;
+               l_ticket_20_16 = l_ticket_24_16;
+            }
+         }
+      }
+      return (l_ord_open_price_8_16);
+   }
 }
