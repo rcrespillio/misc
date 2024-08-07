@@ -1,6 +1,6 @@
 
 //+------------------------------------------------------------------+
-//|                                               EL METABOT v1.1  |
+//|                                               EL METABOT v1.0  |
 //+------------------------------------------------------------------+
 // Dec 15 -2011 -- Add Timer for Loop and print to screen
 // Sep 12 - 2016 -- exposed time frame for ilan1.5
@@ -225,7 +225,7 @@ int start()
    //=================
    // ForestGreen' YellowGreen' Yellow' OrangeRed' Red
    string Balans = NormalizeDouble(AccountBalance(), 2);
-   int Sredstva = NormalizeDouble(AccountEquity(), 2);
+   double Sredstva = NormalizeDouble(AccountEquity(), 2);
    if (Sredstva >= (Balans / 6 * 5))
       col = DodgerBlue;
    if (Sredstva >= (Balans / 6 * 4) && Sredstva < (Balans / 6 * 5))
