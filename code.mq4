@@ -1,8 +1,6 @@
 
 //+------------------------------------------------------------------+
-//|                                               Ilan-TrioKS v1.47  |
-//|                      Copyright © 2016, MetaQuotes Software Corp. |
-//|                                        http://www.metaquotes.net |
+//|                                               EL METABOT v1.0  |
 //+------------------------------------------------------------------+
 // Dec 15 -2011 -- Add Timer for Loop and print to screen
 // Sep 12 - 2016 -- exposed time frame for ilan1.5
@@ -136,9 +134,7 @@ int init()
 
 {
    //=======================
-   Spread_Hilo = MarketInfo(Symbol(), MODE_SPREAD) * Point;
    gd_260_15 = MarketInfo(Symbol(), MODE_SPREAD) * Point;
-   gd_260_16 = MarketInfo(Symbol(), MODE_SPREAD) * Point;
    //------------------------
    ObjectCreate("Lable1", OBJ_LABEL, 0, 0, 1.0);
    ObjectSet("Lable1", OBJPROP_CORNER, 2);
@@ -223,13 +219,13 @@ int start()
    if (Lots > MaxLots)
       Lots = MaxLots; // ����������� �����
    {
-      Comment("  BigGame24.tripod.com" + "\n" + "  Ilan-TrioKS v1.47" + "\n" + "____________________________________________________" + "\n" + "  Broker: " + AccountCompany() + "\n" + "  Brokers Time: " + TimeToStr(TimeCurrent(), TIME_DATE | TIME_SECONDS) + "\n" + "____________________________________________________" + "\n" + "  Name: " + AccountName() + "\n" + "  Account Number : " + AccountNumber() + "\n" + "  Account Currency: " + AccountCurrency() + "\n" + "____________________________________________________" + "\n" + "  Open Orders Ilan_Hilo: " + CountTrades_Hilo() + "\n" + "  Open Orders Ilan_1.5 : " + CountTrades_15() + "\n" + "  Open Orders Ilan_1.6 : " + CountTrades_16() + "\n" + "  ALL ORDERS: " + OrdersTotal() + "\n" + "____________________________________________________" + "\n" + "  Account BALANCE: " + DoubleToStr(AccountBalance(), 2) + "\n" + "  Account EQUITY: " + DoubleToStr(AccountEquity(), 2) + "\n" + "  BigGame24.tripod.com");
+      Comment("  BigGame24.tripod.com" + "\n" + "  Ilan-TrioKS v1.47" + "\n" + "____________________________________________________" + "\n" + "  Broker: " + AccountCompany() + "\n" + "  Brokers Time: " + TimeToStr(TimeCurrent(), TIME_DATE | TIME_SECONDS) + "\n" + "____________________________________________________" + "\n" + "  Name: " + AccountName() + "\n" + "  Account Number : " + AccountNumber() + "\n" + "  Account Currency: " + AccountCurrency() + "\n" + "____________________________________________________" + "\n" + "  Open Orders Ilan_1.6 : " + CountTrades_16() + "\n" + "  ALL ORDERS: " + OrdersTotal() + "\n" + "____________________________________________________" + "\n" + "  Account BALANCE: " + DoubleToStr(AccountBalance(), 2) + "\n" + "  Account EQUITY: " + DoubleToStr(AccountEquity(), 2) + "\n" + "  BigGame24.tripod.com");
    }
    //=================
    //=================
    // ForestGreen' YellowGreen' Yellow' OrangeRed' Red
-   Balans = NormalizeDouble(AccountBalance(), 2);
-   Sredstva = NormalizeDouble(AccountEquity(), 2);
+   string Balans = NormalizeDouble(AccountBalance(), 2);
+   int Sredstva = NormalizeDouble(AccountEquity(), 2);
    if (Sredstva >= Balans / 6 * 5)
       col = DodgerBlue;
    if (Sredstva >= Balans / 6 * 4 && Sredstva < Balans / 6 * 5)
@@ -256,8 +252,6 @@ int start()
    ObjectSet("Lable3", OBJPROP_CORNER, 3);
    ObjectSet("Lable3", OBJPROP_XDISTANCE, 153);
    ObjectSet("Lable3", OBJPROP_YDISTANCE, 11);
-   txt3 = (DoubleToStr(AccountEquity(), 2));
-   ObjectSetText("Lable3", "Account EQUITY:  " + txt3 + "", 16, "Times New Roman", col);
    //-------------------------
    //==================
    //==================
@@ -1168,25 +1162,6 @@ int start()
 //==========================================================================
 //                       ODER FUNCTIONS for 1.5_1.6                       //
 //==========================================================================
-
-//========================================================================//
-//=========================CountTrades_15=================================//
-//========================================================================//
-int CountTrades_15()
-{
-   int l_count_0_15 = 0;
-   for (int l_pos_4_15 = OrdersTotal() - 1; l_pos_4_15 >= 0; l_pos_4_15--)
-   {
-      OrderSelect(l_pos_4_15, SELECT_BY_POS, MODE_TRADES);
-      if (OrderSymbol() != Symbol() || OrderMagicNumber() != g_magic_176_15)
-         continue;
-      if (OrderSymbol() == Symbol() && OrderMagicNumber() == g_magic_176_15)
-         if (OrderType() == OP_SELL || OrderType() == OP_BUY)
-            l_count_0_15++;
-   }
-   return (l_count_0_15);
-}
-
 
 //============================================================//
 //======================CountTrades_16========================//
