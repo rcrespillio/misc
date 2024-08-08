@@ -483,7 +483,7 @@ int start()
          for (l_count_68_16 = 0; l_count_68_16 < li_72_16; l_count_68_16++)
          {
             RefreshRates();
-            l_ticket_60_16 = OrderSend(Symbol(), OP_BUY, a_lots_4_16, Ask, a_slippage_20_16, StopLong_16(Bid, ai_32_16), TakeLong_16(Ask, ai_36_16));
+            l_ticket_60_16 = OrderSend(Symbol(), OP_BUY, a_lots_4_16, Ask, a_slippage_20_16, StopLong_16(Bid, ai_32_16), TakeLong_16(Ask, ai_36_16), a_comment_40_16, a_magic_48_16, a_datetime_52_16);
             l_error_64_16 = GetLastError();
             if (l_error_64_16 == 0 /* NO_ERROR */)
                break;
@@ -495,7 +495,7 @@ int start()
       case 1:
          for (l_count_68_16 = 0; l_count_68_16 < li_72_16; l_count_68_16++)
          {
-            l_ticket_60_16 = OrderSend(Symbol(), OP_SELL, a_lots_4_16, Bid, a_slippage_20_16, StopShort_16(Ask, ai_32_16), TakeShort_16(Bid, ai_36_16));
+            l_ticket_60_16 = OrderSend(Symbol(), OP_SELL, a_lots_4_16, Bid, a_slippage_20_16, StopShort_16(Ask, ai_32_16), TakeShort_16(Bid, ai_36_16), a_comment_40_16, a_magic_48_16, a_datetime_52_16);
             l_error_64_16 = GetLastError();
             if (l_error_64_16 == 0 /* NO_ERROR */)
                break;
