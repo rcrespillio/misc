@@ -44,7 +44,7 @@ double TakeProfit_16;
 extern int MaxTrades_16 = 10;
 bool UseEquityStop_16;     // ������������ ���� � ���������
 double TotalEquityRisk_16; // ���� � ��������� �� ��������
-int OpenNewTF_16 = 1;
+int OpenNewTF_16 = PERIOD_H1;
 //=========================================================
 bool UseTrailingStop_16;
 double Stoploss_16 = 40.0; // ��� ��� ��������� ��������!!!
