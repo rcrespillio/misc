@@ -318,7 +318,7 @@ int start()
                   gi_288_16 = gi_304_16;
                   gd_292_16 = NormalizeDouble(Lots_16 * MathPow(LotExponent_16, gi_288_16), lotdecimal_16);
                   RefreshRates();
-                  gi_328_16 = OpenPendingOrder_16(1, gd_292_16, Bid, slip_16, Ask, 0, 0, gs_ilan_272_16 + "-" + gi_288_16, g_magic_176_16, 0);
+                  gi_328_16 = OpenPendingOrder_16(1, gd_292_16, Bid, slip_16, Ask, 0, TakeProfit_16, gs_ilan_272_16 + "-" + gi_288_16, g_magic_176_16, 0);
                   if (gi_328_16 < 0)
                   {
                      Print("Error: ", GetLastError());
@@ -334,7 +334,7 @@ int start()
                   {
                      gi_288_16 = gi_304_16;
                      gd_292_16 = NormalizeDouble(Lots_16 * MathPow(LotExponent_16, gi_288_16), lotdecimal_16);
-                     gi_328_16 = OpenPendingOrder_16(0, gd_292_16, Ask, slip_16, Bid, 0, 0, gs_ilan_272_16 + "-" + gi_288_16, g_magic_176_16, 0);
+                     gi_328_16 = OpenPendingOrder_16(0, gd_292_16, Ask, slip_16, Bid, 0, TakeProfit_16, gs_ilan_272_16 + "-" + gi_288_16, g_magic_176_16, 0);
                      if (gi_328_16 < 0)
                      {
                         Print("Error: ", GetLastError());
@@ -462,9 +462,9 @@ int start()
             if (OrderSymbol() == Symbol() && OrderMagicNumber() == g_magic_176_16)
             {
                if (OrderType() == OP_BUY)
-                  OrderClose(OrderTicket(), OrderLots(), Bid, slip_16, Blue);
+                  OrderClose(OrderTicket(), OrderLots(), Bid, slip_16);
                if (OrderType() == OP_SELL)
-                  OrderClose(OrderTicket(), OrderLots(), Ask, slip_16, Red);
+                  OrderClose(OrderTicket(), OrderLots(), Ask, slip_16);
             }
             Sleep(1000);
          }
@@ -524,12 +524,12 @@ int start()
          return (ad_0_16 + ai_8_16 * Point);
    }
 
-   double TakeLong_16(double ad_0_16, int ai_8_16)
+   double TakeLong_16(double ask, int ai_8_16)
    {
       if (ai_8_16 == 0)
          return (0);
       else
-         return (ad_0_16 + ai_8_16 * Point);
+         return (ask + ai_8_16 * Point);
    }
 
    double TakeShort_16(double ad_0_16, int ai_8_16)
