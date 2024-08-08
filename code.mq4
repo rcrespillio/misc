@@ -374,7 +374,7 @@ int start()
                {
                   if (iRSI(NULL, PERIOD_H1, 14, PRICE_CLOSE, 1) > 30.0)
                   {
-                     gi_328_16 = OpenPendingOrder_16(1, gd_292_16, g_bid_220_16, slip_16, g_bid_220_16, 0, 0, gs_ilan_272_16 + "-" + gi_288_16, g_magic_176_16, 0);
+                     gi_328_16 = OpenPendingOrder_16(1, gd_292_16, g_bid_220_16, slip_16, g_bid_220_16, 0, TakeProfit_16, gs_ilan_272_16 + "-" + gi_288_16, g_magic_176_16, 0);
                      if (gi_328_16 < 0)
                      {
                         Print("Error: ", GetLastError());
@@ -388,7 +388,7 @@ int start()
                {
                   if (iRSI(NULL, PERIOD_H1, 14, PRICE_CLOSE, 1) < 70.0)
                   {
-                     gi_328_16 = OpenPendingOrder_16(0, gd_292_16, g_ask_228_16, slip_16, g_ask_228_16, 0, 0, gs_ilan_272_16 + "-" + gi_288_16, g_magic_176_16, 0);
+                     gi_328_16 = OpenPendingOrder_16(0, gd_292_16, g_ask_228_16, slip_16, g_ask_228_16, 0, TakeProfit_16, gs_ilan_272_16 + "-" + gi_288_16, g_magic_176_16, 0);
                      if (gi_328_16 < 0)
                      {
                         Print("Error: ", GetLastError());
