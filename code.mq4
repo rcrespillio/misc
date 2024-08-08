@@ -318,7 +318,7 @@ int start()
                   gi_288_16 = gi_304_16;
                   gd_292_16 = NormalizeDouble(Lots_16 * MathPow(LotExponent_16, gi_288_16), lotdecimal_16);
                   RefreshRates();
-                  gi_328_16 = OpenPendingOrder_16(1, gd_292_16, Bid, slip_16, Ask, 0, 0, gs_ilan_272_16 + "-" + gi_288_16, g_magic_176_16, 0, HotPink);
+                  gi_328_16 = OpenPendingOrder_16(1, gd_292_16, Bid, slip_16, Ask, 0, 0);
                   if (gi_328_16 < 0)
                   {
                      Print("Error: ", GetLastError());
@@ -334,7 +334,7 @@ int start()
                   {
                      gi_288_16 = gi_304_16;
                      gd_292_16 = NormalizeDouble(Lots_16 * MathPow(LotExponent_16, gi_288_16), lotdecimal_16);
-                     gi_328_16 = OpenPendingOrder_16(0, gd_292_16, Ask, slip_16, Bid, 0, 0, gs_ilan_272_16 + "-" + gi_288_16, g_magic_176_16, 0, Lime);
+                     gi_328_16 = OpenPendingOrder_16(0, gd_292_16, Ask, slip_16, Bid, 0, 0);
                      if (gi_328_16 < 0)
                      {
                         Print("Error: ", GetLastError());
@@ -374,7 +374,7 @@ int start()
                {
                   if (iRSI(NULL, PERIOD_H1, 14, PRICE_CLOSE, 1) > 30.0)
                   {
-                     gi_328_16 = OpenPendingOrder_16(1, gd_292_16, g_bid_220_16, slip_16, g_bid_220_16, 0, 0, gs_ilan_272_16 + "-" + gi_288_16, g_magic_176_16, 0, HotPink);
+                     gi_328_16 = OpenPendingOrder_16(1, gd_292_16, g_bid_220_16, slip_16, g_bid_220_16, 0, 0);
                      if (gi_328_16 < 0)
                      {
                         Print("Error: ", GetLastError());
@@ -388,7 +388,7 @@ int start()
                {
                   if (iRSI(NULL, PERIOD_H1, 14, PRICE_CLOSE, 1) < 70.0)
                   {
-                     gi_328_16 = OpenPendingOrder_16(0, gd_292_16, g_ask_228_16, slip_16, g_ask_228_16, 0, 0, gs_ilan_272_16 + "-" + gi_288_16, g_magic_176_16, 0, Lime);
+                     gi_328_16 = OpenPendingOrder_16(0, gd_292_16, g_ask_228_16, slip_16, g_ask_228_16, 0, 0);
                      if (gi_328_16 < 0)
                      {
                         Print("Error: ", GetLastError());
@@ -471,7 +471,7 @@ int start()
       }
    }
 
-   int OpenPendingOrder_16(int ai_0_16, double a_lots_4_16, double a_price_12_16, int a_slippage_20_16, double ad_24_16, int ai_32_16, int ai_36_16, string a_comment_40_16, int a_magic_48_16, int a_datetime_52_16, color a_color_56_16)
+   int OpenPendingOrder_16(int ai_0_16, double a_lots_4_16, double a_price_12_16, int a_slippage_20_16, double ad_24_16, int ai_32_16, int ai_36_16)
    {
       int l_ticket_60_16 = 0;
       int l_error_64_16 = 0;
@@ -483,7 +483,7 @@ int start()
          for (l_count_68_16 = 0; l_count_68_16 < li_72_16; l_count_68_16++)
          {
             RefreshRates();
-            l_ticket_60_16 = OrderSend(Symbol(), OP_BUY, a_lots_4_16, Ask, a_slippage_20_16, StopLong_16(Bid, ai_32_16), TakeLong_16(Ask, ai_36_16), a_comment_40_16, a_magic_48_16, a_datetime_52_16, a_color_56_16);
+            l_ticket_60_16 = OrderSend(Symbol(), OP_BUY, a_lots_4_16, Ask, a_slippage_20_16, StopLong_16(Bid, ai_32_16), TakeLong_16(Ask, ai_36_16));
             l_error_64_16 = GetLastError();
             if (l_error_64_16 == 0 /* NO_ERROR */)
                break;
@@ -495,7 +495,7 @@ int start()
       case 1:
          for (l_count_68_16 = 0; l_count_68_16 < li_72_16; l_count_68_16++)
          {
-            l_ticket_60_16 = OrderSend(Symbol(), OP_SELL, a_lots_4_16, Bid, a_slippage_20_16, StopShort_16(Ask, ai_32_16), TakeShort_16(Bid, ai_36_16), a_comment_40_16, a_magic_48_16, a_datetime_52_16, a_color_56_16);
+            l_ticket_60_16 = OrderSend(Symbol(), OP_SELL, a_lots_4_16, Bid, a_slippage_20_16, StopShort_16(Ask, ai_32_16), TakeShort_16(Bid, ai_36_16));
             l_error_64_16 = GetLastError();
             if (l_error_64_16 == 0 /* NO_ERROR */)
                break;
@@ -578,7 +578,7 @@ int start()
                      l_ord_stoploss_20_16 = OrderStopLoss();
                      l_price_28_16 = Bid - ai_4_16 * Point;
                      if (l_ord_stoploss_20_16 == 0.0 || (l_ord_stoploss_20_16 != 0.0 && l_price_28_16 > l_ord_stoploss_20_16))
-                        OrderModify(OrderTicket(), a_price_8_16, l_price_28_16, OrderTakeProfit(), 0, Aqua);
+                        OrderModify(OrderTicket(), a_price_8_16, l_price_28_16, OrderTakeProfit(), 0);
                   }
                   if (OrderType() == OP_SELL)
                   {
@@ -588,7 +588,7 @@ int start()
                      l_ord_stoploss_20_16 = OrderStopLoss();
                      l_price_28_16 = Ask + ai_4_16 * Point;
                      if (l_ord_stoploss_20_16 == 0.0 || (l_ord_stoploss_20_16 != 0.0 && l_price_28_16 < l_ord_stoploss_20_16))
-                        OrderModify(OrderTicket(), a_price_8_16, l_price_28_16, OrderTakeProfit(), 0, Red);
+                        OrderModify(OrderTicket(), a_price_8_16, l_price_28_16, OrderTakeProfit(), 0);
                   }
                }
                Sleep(1000);
