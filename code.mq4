@@ -18,6 +18,7 @@ extern double PipStep = 30.0;         // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½- ï¿½ï¿½ï¿½
 extern double MaxLots = 100;          // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 extern bool MM = FALSE;               // ï¿½ï¿½ - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 extern double TakeProfit = 100.0;     // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+extern double Stoploss_16 = 40.0; // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½!!!
 extern bool UseEquityStop = false;    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 extern double TotalEquityRisk = 20.0; // ï¿½ï¿½ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 extern bool UseTrailingStop = FALSE;  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
@@ -47,7 +48,6 @@ double TotalEquityRisk_16; // ï¿½ï¿½ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿
 int OpenNewTF_16 = PERIOD_H1;
 //=========================================================
 bool UseTrailingStop_16;
-double Stoploss_16 = 40.0; // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½!!!
 double TrailStart_16;
 double TrailStop_16;
 //=========================================================
@@ -224,7 +224,7 @@ int start()
                   tradeCount = tradeSelectRetries;
                   normalizedLotSize = NormalizeDouble(Lots_16 * MathPow(LotExponent_16, tradeCount), lotdecimal_16);
                   RefreshRates();
-                  orderTicket = OpenPendingOrder_16(1, normalizedLotSize, Bid, slip_16, Ask, 0, TakeProfit_16, ilanLabel + "-" + tradeCount, ilanMagicNumber, 0);
+                  orderTicket = OpenPendingOrder_16(1, normalizedLotSize, Bid, slip_16, Ask, Stoploss_16, TakeProfit_16, ilanLabel + "-" + tradeCount, ilanMagicNumber, 0);
                   if (orderTicket < 0)
                   {
                      Print("Error: ", GetLastError());
@@ -240,7 +240,7 @@ int start()
                   {
                      tradeCount = tradeSelectRetries;
                      normalizedLotSize = NormalizeDouble(Lots_16 * MathPow(LotExponent_16, tradeCount), lotdecimal_16);
-                     orderTicket = OpenPendingOrder_16(0, normalizedLotSize, Ask, slip_16, Bid, 0, TakeProfit_16, ilanLabel + "-" + tradeCount, ilanMagicNumber, 0);
+                     orderTicket = OpenPendingOrder_16(0, normalizedLotSize, Ask, slip_16, Bid, Stoploss_16, TakeProfit_16, ilanLabel + "-" + tradeCount, ilanMagicNumber, 0);
                      if (orderTicket < 0)
                      {
                         Print("Error: ", GetLastError());
@@ -280,7 +280,7 @@ int start()
                {
                   if (iRSI(NULL, PERIOD_H1, 14, PRICE_CLOSE, 1) > 30.0)
                   {
-                     orderTicket = OpenPendingOrder_16(1, normalizedLotSize, currentBid, slip_16, currentBid, 0, TakeProfit_16, ilanLabel + "-" + tradeCount, ilanMagicNumber, 0);
+                     orderTicket = OpenPendingOrder_16(1, normalizedLotSize, currentBid, slip_16, currentBid, Stoploss_16, TakeProfit_16, ilanLabel + "-" + tradeCount, ilanMagicNumber, 0);
                      if (orderTicket < 0)
                      {
                         Print("Error: ", GetLastError());
@@ -294,7 +294,7 @@ int start()
                {
                   if (iRSI(NULL, PERIOD_H1, 14, PRICE_CLOSE, 1) < 70.0)
                   {
-                     orderTicket = OpenPendingOrder_16(0, normalizedLotSize, currentAsk, slip_16, currentAsk, 0, TakeProfit_16, ilanLabel + "-" + tradeCount, ilanMagicNumber, 0);
+                     orderTicket = OpenPendingOrder_16(0, normalizedLotSize, currentAsk, slip_16, currentAsk, Stoploss_16, TakeProfit_16, ilanLabel + "-" + tradeCount, ilanMagicNumber, 0);
                      if (orderTicket < 0)
                      {
                         Print("Error: ", GetLastError());
@@ -377,42 +377,44 @@ int start()
       }
    }
 
-   int OpenPendingOrder_16(int ai_0_16, double a_lots_4_16, double a_price_12_16, int a_slippage_20_16, double ad_24_16, int ai_32_16, int ai_36_16, string a_comment_40_16, int a_magic_48_16, int a_datetime_52_16)
-   {
-      int l_ticket_60_16 = 0;
-      int l_error_64_16 = 0;
-      int l_count_68_16 = 0;
-      int li_72_16 = 100;
-      switch (ai_0_16)
-      {
-      case 0:
-         for (l_count_68_16 = 0; l_count_68_16 < li_72_16; l_count_68_16++)
-         {
-            RefreshRates();
-            l_ticket_60_16 = OrderSend(Symbol(), OP_BUY, a_lots_4_16, Ask, a_slippage_20_16, StopLong_16(Bid, ai_32_16), TakeLong_16(Ask, ai_36_16), a_comment_40_16, a_magic_48_16, a_datetime_52_16);
-            l_error_64_16 = GetLastError();
-            if (l_error_64_16 == 0 /* NO_ERROR */)
-               break;
-            if (!(l_error_64_16 == 4 /* SERVER_BUSY */ || l_error_64_16 == 137 /* BROKER_BUSY */ || l_error_64_16 == 146 /* TRADE_CONTEXT_BUSY */ || l_error_64_16 == 136 /* OFF_QUOTES */))
-               break;
-            Sleep(5000);
-         }
-         break;
-      case 1:
-         for (l_count_68_16 = 0; l_count_68_16 < li_72_16; l_count_68_16++)
-         {
-            l_ticket_60_16 = OrderSend(Symbol(), OP_SELL, a_lots_4_16, Bid, a_slippage_20_16, StopShort_16(Ask, ai_32_16), TakeShort_16(Bid, ai_36_16), a_comment_40_16, a_magic_48_16, a_datetime_52_16);
-            l_error_64_16 = GetLastError();
-            if (l_error_64_16 == 0 /* NO_ERROR */)
-               break;
-            if (!(l_error_64_16 == 4 /* SERVER_BUSY */ || l_error_64_16 == 137 /* BROKER_BUSY */ || l_error_64_16 == 146 /* TRADE_CONTEXT_BUSY */ || l_error_64_16 == 136 /* OFF_QUOTES */))
-               break;
-            Sleep(5000);
-         }
-      }
+int OpenPendingOrder_16(int orderType, double lotSize, double price, int slippage, double stopLoss, int stopLossPips, int takeProfitPips, string orderComment, int magicNumber, int expirationTime)
+{
+   int orderTicket = 0;
+   int errorCode = 0;
+   int attemptCount = 0;
+   int maxAttempts = 100;
 
-      return (l_ticket_60_16);
+   switch (orderType)
+   {
+   case 0: // Buy Order
+      for (attemptCount = 0; attemptCount < maxAttempts; attemptCount++)
+      {
+         RefreshRates();
+         orderTicket = OrderSend(Symbol(), OP_BUY, lotSize, Ask, slippage, StopLong_16(Bid, stopLossPips), TakeLong_16(Ask, takeProfitPips), orderComment, magicNumber, expirationTime);
+         errorCode = GetLastError();
+         if (errorCode == 0) // NO_ERROR
+            break;
+         if (!(errorCode == 4 || errorCode == 137 || errorCode == 146 || errorCode == 136)) // SERVER_BUSY, BROKER_BUSY, TRADE_CONTEXT_BUSY, OFF_QUOTES
+            break;
+         Sleep(5000);
+      }
+      break;
+
+   case 1: // Sell Order
+      for (attemptCount = 0; attemptCount < maxAttempts; attemptCount++)
+      {
+         orderTicket = OrderSend(Symbol(), OP_SELL, lotSize, Bid, slippage, StopShort_16(Ask, stopLossPips), TakeShort_16(Bid, takeProfitPips), orderComment, magicNumber, expirationTime);
+         errorCode = GetLastError();
+         if (errorCode == 0) // NO_ERROR
+            break;
+         if (!(errorCode == 4 || errorCode == 137 || errorCode == 146 || errorCode == 136)) // SERVER_BUSY, BROKER_BUSY, TRADE_CONTEXT_BUSY, OFF_QUOTES
+            break;
+         Sleep(5000);
+      }
    }
+
+   return (orderTicket);
+}
 
    double StopLong_16(double ad_0_16, int ai_8_16)
    {
