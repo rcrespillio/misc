@@ -1,0 +1,178 @@
+//+------------------------------------------------------------------+
+//|                                                      MyExpert.mq4 |
+//|                        Your Name                                    |
+//|                        Your Company                                |
+//+------------------------------------------------------------------+
+#property strict
+
+//--- input parameters
+input int slip_16 = 5; // Maximum slippage in points
+input double TakeProfit_16 = 100.0;
+input double Stoploss_16 = 40.0;
+input double Lots = 0.01;
+input int ilanMagicNumber = 23794;
+input double MaxLots = 100;
+
+double closePriceTwoBarsAgo;
+double closePricePreviousBar;
+double currentBid;
+double currentAsk;
+int tradeCount = 0;
+double normalizedLotSize;
+int tradeSelectRetries;
+int orderTicket;
+datetime lastTimeFrame = 1;
+string ilanLabel = "NEWBOT 1.6-CFK";
+int ilanTimeFrame = PERIOD_H1;
+double BOT_LOTS = Lots; // ����������� ���� ����
+
+//=======================
+
+//+------------------------------------------------------------------+
+//| Expert initialization function                                   |
+//+------------------------------------------------------------------+
+int OnInit()
+{
+    // Initialization code here
+    // Example: Print a message to the log
+    Print("Expert Advisor initialized");
+    if (Lots > MaxLots)
+        BOT_LOTS = MaxLots;
+
+    // Return initialization result
+    return (INIT_SUCCEEDED);
+}
+//+------------------------------------------------------------------+
+//| Expert deinitialization function                                 |
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason)
+{
+    // Cleanup code here
+    // Example: Print a message to the log
+    Print("Expert Advisor deinitialized");
+}
+//+------------------------------------------------------------------+
+//| Expert tick function                                             |
+//+------------------------------------------------------------------+
+void OnTick()
+{
+    // Main trading logic here
+    // Example: Print a message to the log
+    Print("New tick received");
+    if (lastTimeFrame != iTime(NULL, ilanTimeFrame, 0))
+    {
+        closePriceTwoBarsAgo = iClose(Symbol(), 0, 2);
+        closePricePreviousBar = iClose(Symbol(), 0, 1);
+        currentBid = Bid;
+        currentAsk = Ask;
+        tradeCount = tradeSelectRetries;
+        normalizedLotSize = BOT_LOTS;
+        if (closePriceTwoBarsAgo > closePricePreviousBar)
+        {
+            if (iRSI(NULL, PERIOD_H1, 14, PRICE_CLOSE, 1) > 30.0)
+            {
+                orderTicket = OpenPendingOrder_16(1, normalizedLotSize, currentBid, slip_16, currentBid, Stoploss_16, TakeProfit_16, ilanLabel + "-" + tradeCount, ilanMagicNumber, 0);
+                if (orderTicket < 0)
+                {
+                    Print("Error: ", GetLastError());
+                    return;
+                }
+                lastTimeFrame = iTime(NULL, ilanTimeFrame, 0);
+            }
+            else
+            {
+                Print("NO ABRI ESTA ORDEN PORQUE iRSI(NULL, PERIOD_H1, 14, PRICE_CLOSE, 1) < 30.0");
+            }
+        }
+        else
+        {
+            if (iRSI(NULL, PERIOD_H1, 14, PRICE_CLOSE, 1) < 70.0)
+            {
+                orderTicket = OpenPendingOrder_16(0, normalizedLotSize, currentAsk, slip_16, currentAsk, Stoploss_16, TakeProfit_16, ilanLabel + "-" + tradeCount, ilanMagicNumber, 0);
+                if (orderTicket < 0)
+                {
+                    Print("Error: ", GetLastError());
+                    return;
+                }
+                lastTimeFrame = iTime(NULL, ilanTimeFrame, 0);
+            }
+            else
+            {
+                Print("NO ABRI ESTA ORDEN PORQUE iRSI(NULL, PERIOD_H1, 14, PRICE_CLOSE, 1) > 70.0");
+            }
+        }
+        // Example: Check if a trade needs to be opened or closed
+        // This is where you add your trading logic
+    }
+}
+
+int OpenPendingOrder_16(int orderType, double lotSize, double price, int slippage, double stopLoss, int stopLossPips, int takeProfitPips, string orderComment, int magicNumber, int expirationTime)
+{
+    int orderTicket = 0;
+    int errorCode = 0;
+    int attemptCount = 0;
+    int maxAttempts = 100;
+
+    switch (orderType)
+    {
+    case 0: // Buy Order
+        for (attemptCount = 0; attemptCount < maxAttempts; attemptCount++)
+        {
+            RefreshRates();
+            orderTicket = OrderSend(Symbol(), OP_BUY, lotSize, Ask, slippage, StopLong_16(Bid, stopLossPips), TakeLong_16(Ask, takeProfitPips), orderComment, magicNumber, expirationTime);
+            errorCode = GetLastError();
+            if (errorCode == 0) // NO_ERROR
+                break;
+            if (!(errorCode == 4 || errorCode == 137 || errorCode == 146 || errorCode == 136)) // SERVER_BUSY, BROKER_BUSY, TRADE_CONTEXT_BUSY, OFF_QUOTES
+                break;
+            Sleep(5000);
+        }
+        break;
+
+    case 1: // Sell Order
+        for (attemptCount = 0; attemptCount < maxAttempts; attemptCount++)
+        {
+            orderTicket = OrderSend(Symbol(), OP_SELL, lotSize, Bid, slippage, StopShort_16(Ask, stopLossPips), TakeShort_16(Bid, takeProfitPips), orderComment, magicNumber, expirationTime);
+            errorCode = GetLastError();
+            if (errorCode == 0) // NO_ERROR
+                break;
+            if (!(errorCode == 4 || errorCode == 137 || errorCode == 146 || errorCode == 136)) // SERVER_BUSY, BROKER_BUSY, TRADE_CONTEXT_BUSY, OFF_QUOTES
+                break;
+            Sleep(5000);
+        }
+    }
+
+    return (orderTicket);
+}
+
+double StopLong_16(double ad_0_16, int ai_8_16)
+{
+    if (ai_8_16 == 0)
+        return (0);
+    else
+        return (ad_0_16 - ai_8_16 * Point);
+}
+
+double StopShort_16(double ad_0_16, int ai_8_16)
+{
+    if (ai_8_16 == 0)
+        return (0);
+    else
+        return (ad_0_16 + ai_8_16 * Point);
+}
+
+double TakeLong_16(double ask, int ai_8_16)
+{
+    if (ai_8_16 == 0)
+        return (0);
+    else
+        return (ask + ai_8_16 * Point);
+}
+
+double TakeShort_16(double ad_0_16, int ai_8_16)
+{
+    if (ai_8_16 == 0)
+        return (0);
+    else
+        return (ad_0_16 - ai_8_16 * Point);
+}
